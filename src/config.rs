@@ -2,23 +2,23 @@ use serde::{Deserialize, Serialize};
 use serde_json::Result;
 use std::env;
 use std::fs;
+use log::{info};
 
 #[derive(Serialize, Deserialize)]
 pub struct Pair {
-    symbol: String,
+    pub symbol: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pairs: Vec<Pair>,
+    pub pairs: Vec<Pair>,
 }
 
 
-pub(crate) fn config() -> Result<()> {
+pub(crate) fn config() -> Result<Config> {
+    info!("Reading config");
     let contents = fs::read_to_string("src/config.json")
         .expect("Couldn't find config file, is it in src/config.json ?");
     let c: Config = serde_json::from_str(&contents)?;
-
-
-    Ok(())
+    Ok(c)
 }
