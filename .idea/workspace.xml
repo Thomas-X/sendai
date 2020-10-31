@@ -14,13 +14,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44d18b28-b9a2-4cf7-80fe-5925797f47ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/handle_kline_event.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/logging.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/open_kline_stream.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/kline.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/handle_kline_event.rs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/open_kline_stream.rs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +59,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
@@ -84,20 +88,10 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-      <option name="channel" value="DEFAULT" />
-      <option name="command" value="run" />
-      <option name="allFeatures" value="false" />
-      <option name="emulateTerminal" value="false" />
-      <option name="backtrace" value="SHORT" />
-      <envs />
-      <method v="2">
-        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+    <option name="version" value="2" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -107,7 +101,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1604062326439</updated>
-      <workItem from="1604062328138" duration="11388000" />
+      <workItem from="1604062328138" duration="11841000" />
+      <workItem from="1604159681731" duration="7684000" />
     </task>
     <task id="LOCAL-00001" summary="feat: initial commit">
       <created>1604065921138</created>
@@ -116,7 +111,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604065921138</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: initial commit">
+      <created>1604157317192</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1604157317192</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,6 +134,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: initial commit" />
@@ -142,30 +145,38 @@
       <screen x="0" y="23" width="1440" height="832" />
     </state>
     <state x="184" y="101" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.832@0.23.1440.832" timestamp="1604064815219" />
+    <state x="458" y="193" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1604180162928">
+      <screen x="0" y="23" width="1440" height="832" />
+    </state>
+    <state x="458" y="193" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.832@0.23.1440.832" timestamp="1604180162928" />
     <state x="572" y="23" width="295" height="832" key="EnvironmentVariablesDialog" timestamp="1604064814164">
       <screen x="0" y="23" width="1440" height="832" />
     </state>
     <state x="572" y="23" width="295" height="832" key="EnvironmentVariablesDialog/0.23.1440.832@0.23.1440.832" timestamp="1604064814164" />
-    <state width="1398" height="366" key="GridCell.Tab.0.bottom" timestamp="1604073941843">
+    <state width="1398" height="235" key="GridCell.Tab.0.bottom" timestamp="1604184850429">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state width="1398" height="235" key="GridCell.Tab.0.bottom/0.23.1440.831@0.23.1440.831" timestamp="1604184850429" />
+    <state width="1398" height="168" key="GridCell.Tab.0.bottom/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
+    <state width="1398" height="235" key="GridCell.Tab.0.center" timestamp="1604184850428">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state width="1398" height="235" key="GridCell.Tab.0.center/0.23.1440.831@0.23.1440.831" timestamp="1604184850428" />
+    <state width="1398" height="168" key="GridCell.Tab.0.center/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
+    <state width="1398" height="235" key="GridCell.Tab.0.left" timestamp="1604184850428">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state width="1398" height="235" key="GridCell.Tab.0.left/0.23.1440.831@0.23.1440.831" timestamp="1604184850428" />
+    <state width="1398" height="168" key="GridCell.Tab.0.left/0.23.1440.832@0.23.1440.832" timestamp="1604180497429" />
+    <state width="1398" height="235" key="GridCell.Tab.0.right" timestamp="1604184850429">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state width="1398" height="235" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604184850429" />
+    <state width="1398" height="168" key="GridCell.Tab.0.right/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604157318846">
       <screen x="0" y="23" width="1440" height="832" />
     </state>
-    <state width="1398" height="366" key="GridCell.Tab.0.bottom/0.23.1440.832@0.23.1440.832" timestamp="1604073941843" />
-    <state width="1398" height="366" key="GridCell.Tab.0.center" timestamp="1604073941842">
-      <screen x="0" y="23" width="1440" height="832" />
-    </state>
-    <state width="1398" height="366" key="GridCell.Tab.0.center/0.23.1440.832@0.23.1440.832" timestamp="1604073941842" />
-    <state width="1398" height="366" key="GridCell.Tab.0.left" timestamp="1604073941842">
-      <screen x="0" y="23" width="1440" height="832" />
-    </state>
-    <state width="1398" height="366" key="GridCell.Tab.0.left/0.23.1440.832@0.23.1440.832" timestamp="1604073941842" />
-    <state width="1398" height="366" key="GridCell.Tab.0.right" timestamp="1604073941842">
-      <screen x="0" y="23" width="1440" height="832" />
-    </state>
-    <state width="1398" height="366" key="GridCell.Tab.0.right/0.23.1440.832@0.23.1440.832" timestamp="1604073941842" />
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604065955964">
-      <screen x="0" y="23" width="1440" height="832" />
-    </state>
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.832@0.23.1440.832" timestamp="1604065955964" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.832@0.23.1440.832" timestamp="1604157318846" />
     <state x="516" y="356" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604067545339">
       <screen x="0" y="23" width="1440" height="832" />
     </state>

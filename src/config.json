@@ -9,5 +9,9 @@
     {
       "symbol": "LTCUSDT"
     }
-  ]
+  ],
+  "api_key": {
+    "key": "ycoSpsamWXrt3OG8zfOwKqZnxUJiVBY9I65WjqHFqYeJFVEOa8r8tbeiIGPxJPpA",
+    "secret": "3epkSfZuUd75HLuGHOooJUuxs5e0xPjUrr0lSJr0ikTSllX4tRR4Id5bNeJYCO7m"
+  }
 }
