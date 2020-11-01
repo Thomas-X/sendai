@@ -11,18 +11,19 @@ pub mod kline {
     use binance::market::*;
     use self::binance::api::Binance;
     use self::binance::errors::Error;
+    use crate::strategy::strategy;
 
     pub type KlineHandler = fn(KlineEvent, &Connection) -> ();
 
     pub fn handle_kline_event(kline_event: KlineEvent, conn: &Connection) {
-        let kline = &kline_event.kline;
+        let kline = kline_event.kline;
         conn.execute(
             "REPLACE INTO klines (id, end_time, open, close, high, low, volume, quote_volume) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
             params![kline.start_time, kline.end_time, kline.open, kline.close, kline.high, kline.low, kline.volume, kline.quote_volume],
         ).unwrap();
         // this means it's a "real" event, not from fillup and we should act
         if kline.symbol != "" {
-            let mut stmt = conn.prepare("SELECT * FROM klines ORDER BY id DESC LIMIT 500").unwrap();
+            let mut stmt = conn.prepare("SELECT * FROM klines ORDER BY id DESC LIMIT 150").unwrap();
             let kline_iter = stmt.query_map(params![], |row| {
                 Ok(Kline {
                     start_time: row.get(0).unwrap(),
@@ -45,9 +46,11 @@ pub mod kline {
                 })
             }).unwrap();
 
-            // for kline in kline_iter {
-            //     println!("Found kline {:?}", kline.unwrap());
-            // }
+            let mut klines = vec![];
+            for kline in kline_iter {
+                klines.push(kline.unwrap());
+            }
+            strategy::should_buy(klines);
 
             // then feed this into a "strategy" and act upon it's orders
 

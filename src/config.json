@@ -2,12 +2,6 @@
   "pairs": [
     {
       "symbol": "BTCUSDT"
-    },
-    {
-      "symbol": "ETHUSDT"
-    },
-    {
-      "symbol": "LTCUSDT"
     }
   ],
   "api_key": {
