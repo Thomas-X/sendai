@@ -5,6 +5,11 @@ mod strategy;
 mod squeeze_momentum;
 mod sma;
 mod stdev;
+mod trange;
+mod linreg;
+mod highest;
+mod lowest;
+mod avg;
 
 use std::sync::atomic::{AtomicBool};
 use log::{info, trace, warn};

@@ -7,8 +7,8 @@ pub mod sma {
         sum
     }
 
-    pub fn sma(period: i32, close_prices: &Vec<f64>) -> f64 {
-        sum(close_prices) / period as f64
+    pub fn sma(period: i32, close: &Vec<f64>) -> f64 {
+        sum(close) / period as f64
     }
 }
 

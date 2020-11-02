@@ -14,12 +14,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44d18b28-b9a2-4cf7-80fe-5925797f47ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sma.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/stdev.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/avg.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/highest.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/linreg.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lowest.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/trange.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sma.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/sma.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/squeeze_momentum.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/squeeze_momentum.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/strategy.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/strategy.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stdev.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/stdev.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +106,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604062326439</updated>
       <workItem from="1604062328138" duration="11841000" />
-      <workItem from="1604159681731" duration="15442000" />
+      <workItem from="1604159681731" duration="31235000" />
     </task>
     <task id="LOCAL-00001" summary="feat: initial commit">
       <created>1604065921138</created>
@@ -132,7 +136,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604228948166</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="misc indicators">
+      <created>1604311397862</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1604311397865</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,7 +165,8 @@
     <MESSAGE value="feat: initial commit" />
     <MESSAGE value="add data fillup and sql persistence" />
     <MESSAGE value="add setup for squeeze momentum" />
-    <option name="LAST_COMMIT_MESSAGE" value="add setup for squeeze momentum" />
+    <MESSAGE value="misc indicators" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc indicators" />
   </component>
   <component name="WindowStateProjectService">
     <state x="184" y="101" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604064815219">
@@ -169,34 +181,46 @@
       <screen x="0" y="23" width="1440" height="832" />
     </state>
     <state x="572" y="23" width="295" height="832" key="EnvironmentVariablesDialog/0.23.1440.832@0.23.1440.832" timestamp="1604064814164" />
-    <state width="1398" height="348" key="GridCell.Tab.0.bottom" timestamp="1604244984120">
+    <state width="1016" height="245" key="GridCell.Tab.0.bottom" timestamp="1604335088446">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.bottom/0.23.1440.831@0.23.1440.831" timestamp="1604244984120" />
+    <state width="1016" height="245" key="GridCell.Tab.0.bottom/0.23.1440.831@0.23.1440.831" timestamp="1604335088446" />
     <state width="1398" height="168" key="GridCell.Tab.0.bottom/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state width="1398" height="348" key="GridCell.Tab.0.center" timestamp="1604244984114">
+    <state width="1016" height="245" key="GridCell.Tab.0.center" timestamp="1604335088445">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.center/0.23.1440.831@0.23.1440.831" timestamp="1604244984114" />
+    <state width="1016" height="245" key="GridCell.Tab.0.center/0.23.1440.831@0.23.1440.831" timestamp="1604335088445" />
     <state width="1398" height="168" key="GridCell.Tab.0.center/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state width="1398" height="348" key="GridCell.Tab.0.left" timestamp="1604244984110">
+    <state width="1016" height="245" key="GridCell.Tab.0.left" timestamp="1604335088445">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.left/0.23.1440.831@0.23.1440.831" timestamp="1604244984110" />
+    <state width="1016" height="245" key="GridCell.Tab.0.left/0.23.1440.831@0.23.1440.831" timestamp="1604335088445" />
     <state width="1398" height="168" key="GridCell.Tab.0.left/0.23.1440.832@0.23.1440.832" timestamp="1604180497429" />
-    <state width="1398" height="348" key="GridCell.Tab.0.right" timestamp="1604244984119">
+    <state width="1016" height="245" key="GridCell.Tab.0.right" timestamp="1604335088446">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604244984119" />
+    <state width="1016" height="245" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604335088446" />
     <state width="1398" height="168" key="GridCell.Tab.0.right/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604228949589">
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604311400236">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.831@0.23.1440.831" timestamp="1604228949589" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.831@0.23.1440.831" timestamp="1604311400236" />
     <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.832@0.23.1440.832" timestamp="1604157318846" />
     <state x="516" y="356" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604067545339">
       <screen x="0" y="23" width="1440" height="832" />
     </state>
     <state x="516" y="356" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.832@0.23.1440.832" timestamp="1604067545339" />
+    <state x="419" y="177" width="602" height="522" key="find.popup" timestamp="1604332053726">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state x="419" y="177" width="602" height="522" key="find.popup/0.23.1440.831@0.23.1440.831" timestamp="1604332053726" />
+    <state x="385" y="199" key="run.anything.popup" timestamp="1604323541793">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state x="385" y="199" key="run.anything.popup/0.23.1440.831@0.23.1440.831" timestamp="1604323541793" />
+    <state x="385" y="178" key="search.everywhere.popup" timestamp="1604316747377">
+      <screen x="0" y="23" width="1440" height="831" />
+    </state>
+    <state x="385" y="178" key="search.everywhere.popup/0.23.1440.831@0.23.1440.831" timestamp="1604316747377" />
   </component>
 </project>
