@@ -14,14 +14,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44d18b28-b9a2-4cf7-80fe-5925797f47ef" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/squeeze_momentum.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/strategy.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sma.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/stdev.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kline.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/kline.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/squeeze_momentum.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/squeeze_momentum.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/strategy.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/strategy.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +62,7 @@
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -103,7 +102,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604062326439</updated>
       <workItem from="1604062328138" duration="11841000" />
-      <workItem from="1604159681731" duration="10087000" />
+      <workItem from="1604159681731" duration="15442000" />
     </task>
     <task id="LOCAL-00001" summary="feat: initial commit">
       <created>1604065921138</created>
@@ -126,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604185034090</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add setup for squeeze momentum">
+      <created>1604228948166</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1604228948166</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -147,7 +153,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: initial commit" />
     <MESSAGE value="add data fillup and sql persistence" />
-    <option name="LAST_COMMIT_MESSAGE" value="add data fillup and sql persistence" />
+    <MESSAGE value="add setup for squeeze momentum" />
+    <option name="LAST_COMMIT_MESSAGE" value="add setup for squeeze momentum" />
   </component>
   <component name="WindowStateProjectService">
     <state x="184" y="101" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604064815219">
@@ -162,30 +169,30 @@
       <screen x="0" y="23" width="1440" height="832" />
     </state>
     <state x="572" y="23" width="295" height="832" key="EnvironmentVariablesDialog/0.23.1440.832@0.23.1440.832" timestamp="1604064814164" />
-    <state width="1398" height="348" key="GridCell.Tab.0.bottom" timestamp="1604227427064">
+    <state width="1398" height="348" key="GridCell.Tab.0.bottom" timestamp="1604244984120">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.bottom/0.23.1440.831@0.23.1440.831" timestamp="1604227427064" />
+    <state width="1398" height="348" key="GridCell.Tab.0.bottom/0.23.1440.831@0.23.1440.831" timestamp="1604244984120" />
     <state width="1398" height="168" key="GridCell.Tab.0.bottom/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state width="1398" height="348" key="GridCell.Tab.0.center" timestamp="1604227427063">
+    <state width="1398" height="348" key="GridCell.Tab.0.center" timestamp="1604244984114">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.center/0.23.1440.831@0.23.1440.831" timestamp="1604227427063" />
+    <state width="1398" height="348" key="GridCell.Tab.0.center/0.23.1440.831@0.23.1440.831" timestamp="1604244984114" />
     <state width="1398" height="168" key="GridCell.Tab.0.center/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state width="1398" height="348" key="GridCell.Tab.0.left" timestamp="1604227427063">
+    <state width="1398" height="348" key="GridCell.Tab.0.left" timestamp="1604244984110">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.left/0.23.1440.831@0.23.1440.831" timestamp="1604227427063" />
+    <state width="1398" height="348" key="GridCell.Tab.0.left/0.23.1440.831@0.23.1440.831" timestamp="1604244984110" />
     <state width="1398" height="168" key="GridCell.Tab.0.left/0.23.1440.832@0.23.1440.832" timestamp="1604180497429" />
-    <state width="1398" height="348" key="GridCell.Tab.0.right" timestamp="1604227427063">
+    <state width="1398" height="348" key="GridCell.Tab.0.right" timestamp="1604244984119">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state width="1398" height="348" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604227427063" />
+    <state width="1398" height="348" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604244984119" />
     <state width="1398" height="168" key="GridCell.Tab.0.right/0.23.1440.832@0.23.1440.832" timestamp="1604180497430" />
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604185035576">
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604228949589">
       <screen x="0" y="23" width="1440" height="831" />
     </state>
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.831@0.23.1440.831" timestamp="1604185035576" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.831@0.23.1440.831" timestamp="1604228949589" />
     <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.832@0.23.1440.832" timestamp="1604157318846" />
     <state x="516" y="356" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604067545339">
       <screen x="0" y="23" width="1440" height="832" />

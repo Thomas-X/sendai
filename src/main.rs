@@ -3,6 +3,8 @@ mod logging;
 mod kline;
 mod strategy;
 mod squeeze_momentum;
+mod sma;
+mod stdev;
 
 use std::sync::atomic::{AtomicBool};
 use log::{info, trace, warn};

@@ -48,11 +48,35 @@
 // plot(0, color=scolor, style=cross, linewidth=2)
 
 
-mod squeeze_momentum {
+pub mod squeeze_momentum {
     extern crate ta_lib_wrapper;
     use binance::model::Kline;
+    use log::{info, trace, warn};
+    use crate::sma::sma::sma;
 
     pub fn calculate(klines: Vec<Kline>) {
+        let length = 20;
+        let mult = 2.0;
+        let lengthKC = 20;
+        let multKC = 1.5;
+        let useTrueRange = true;
 
+        let current_kline = &klines[0];
+
+        let source = &current_kline.close;
+        let basis = sma(length, &klines
+            .into_iter()
+            .take(length as usize)
+            .map(|f| {
+                f.close.parse::<f64>().unwrap()
+            })
+            .collect::<Vec<f64>>()
+        );
+        // let dev = multKC * stdev(length, source);
+
+        info!("SMA: {:?}", basis);
+
+        // Calculate BB
+        // source = current_kline.close
     }
 }
