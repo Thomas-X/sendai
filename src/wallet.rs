@@ -28,8 +28,13 @@ pub mod wallet {
             params![],
         ).unwrap();
         loop {
-            let account_information = account.get_account().unwrap();
-            let balance = account_information.balances
+            let account_information = account.get_account();
+            if account_information.is_err() {
+                warn!("err when updating wallet {:?}", account_information.err().unwrap());
+                continue;
+            }
+            let v = account_information.ok().unwrap();
+            let balance = v.balances
                 .iter()
                 .find(|f| f.asset == "USDT")
                 .unwrap();
