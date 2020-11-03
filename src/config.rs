@@ -23,7 +23,6 @@ pub mod config {
     }
 
     pub fn config() -> Config {
-        info!("Reading config");
         let contents = fs::read_to_string("src/config.json")
             .expect("Couldn't find config file, is it in src/config.json ?");
         let c: Config = serde_json::from_str(&contents)

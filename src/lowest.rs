@@ -13,7 +13,6 @@ pub mod lowest {
                 f
             })
             .for_each(drop);
-        info!("lowest: {:?}", lowest);
         lowest
     }
 }

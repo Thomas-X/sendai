@@ -13,7 +13,6 @@ pub mod highest {
                 f
             })
             .for_each(drop);
-        info!("highest: {:?}", highest);
         highest
     }
 }

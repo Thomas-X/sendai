@@ -61,6 +61,8 @@ pub mod squeeze_momentum {
     use crate::highest::highest::highest;
     use crate::lowest::lowest::lowest;
 
+    static mut last_value: f64 = 0.0;
+
     pub fn slice_and_map(klines: &Vec<Kline>, len: i32, mapper: fn(&Kline) -> f64) -> Vec<f64> {
         klines
             .into_iter()
@@ -73,7 +75,7 @@ pub mod squeeze_momentum {
         f.close.parse::<f64>().unwrap()
     }
 
-    pub fn calculate(klines: Vec<Kline>) {
+    pub fn calculate(klines: &Vec<Kline>) -> (f64, f64) {
         let length: i32 = 20;
         let mult = 2.0;
         let length_kc: i32 = 20;
@@ -140,18 +142,10 @@ pub mod squeeze_momentum {
                 .collect::<Vec<f64>>(),
             length_kc,
         );
-        info!("super_avg {:?}", super_avg);
-        info!("close first {:?}", close.first().unwrap());
-        info!("close last {:?}", close.last().unwrap());
-        info!("super_avg - close {:?}", &close
-            .into_iter()
-            .map(|f| {
-                f - super_avg
-            })
-            .collect::<Vec<f64>>());
-        info!("val: {:?}", val.0[0]);
-        // info!("squeeze_on: {:?}", squeeze_on);
-        // info!("squeeze_off: {:?}", squeeze_off);
-        // info!("no_squeeze: {:?}", no_squeeze);
+        let l_val = unsafe { last_value }.clone();
+        unsafe {
+            last_value = val.0[0];
+        };
+        (l_val, val.0[0])
     }
 }
