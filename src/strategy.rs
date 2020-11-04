@@ -19,7 +19,11 @@ pub mod strategy {
         let (last_value, current_value) = squeeze_momentum::calculate(&klines);
         info!("Current squeeze value: {:?}", current_value);
         if current_value > 0.0 {
-            return (current_value > last_value, false);
+            return if current_value >= 21.9 {
+                (current_value > last_value, false)
+            } else {
+                (false, false)
+            }
         } else if current_value < 0.0 {
             // -30 is the lower band of the indicator (see tradingview https://www.tradingview.com/chart/LX2mHohb/)
             return if current_value <= -16.0 {

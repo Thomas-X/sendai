@@ -22,8 +22,7 @@ use crate::kline::kline::*;
 use crate::config::config::config;
 use crate::wallet::wallet::refresh;
 
-#[tokio::main]
-async fn main() {
+fn main() -> () {
     logging::logging();
     info!("Starting up");
     let config = config();

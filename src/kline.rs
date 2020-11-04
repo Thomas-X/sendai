@@ -5,7 +5,7 @@ pub mod kline {
     use std::sync::atomic::AtomicBool;
     use self::binance::model::{KlineEvent, KlineSummaries, Kline};
     use log::{info, trace, warn};
-    use rusqlite::{params, Connection, Result};
+    use rusqlite::{params, Connection, Result, Statement};
     use crate::config::config::{config, Config};
     use binance::market::*;
     use self::binance::api::Binance;
@@ -25,19 +25,35 @@ pub mod kline {
         start_bar_time: i64,
     }
 
-    pub fn get_trades (trade_conn: &Connection, kline: &Kline) -> Vec<Trade> {
-        let mut stmt = trade_conn.prepare("SELECT * FROM trades WHERE start_bar_time = ?1").unwrap();
-        stmt.query_map(params![kline.start_time], |row| {
-            Ok(Trade {
-                id: row.get(0).unwrap(),
-                amount_crypto: row.get(1).unwrap(),
-                amount_money: row.get(2).unwrap(),
-                start_bar_time: row.get(3).unwrap(),
+    pub fn get_trades (trade_conn: &Connection, kline: &Kline, current_bar: bool) -> Vec<Trade> {
+        if current_bar {
+            let mut stmt = trade_conn.prepare("SELECT * FROM trades WHERE start_bar_time = ?1").unwrap();
+            stmt.query_map(params![kline.start_time], |row| {
+                Ok(Trade {
+                    id: row.get(0).unwrap(),
+                    amount_crypto: row.get(1).unwrap(),
+                    amount_money: row.get(2).unwrap(),
+                    start_bar_time: row.get(3).unwrap(),
+                })
             })
-        })
-            .unwrap()
-            .map(|f| f.unwrap())
-            .collect()
+                .unwrap()
+                .map(|f| f.unwrap())
+                .collect()
+        } else {
+            let mut stmt = trade_conn.prepare("SELECT * FROM trades").unwrap();
+            stmt.query_map(params![], |row| {
+                Ok(Trade {
+                    id: row.get(0).unwrap(),
+                    amount_crypto: row.get(1).unwrap(),
+                    amount_money: row.get(2).unwrap(),
+                    start_bar_time: row.get(3).unwrap(),
+                })
+            })
+                .unwrap()
+                .map(|f| f.unwrap())
+                .collect()
+        }
+
     }
 
     pub fn handle_kline_event(kline_event: KlineEvent, conn: &Connection, wallet_conn: &Connection, trade_conn: &Connection) {
@@ -82,7 +98,7 @@ pub mod kline {
             let quote_order_qty = 11.0;
             // max 5 buy trades per bar
 
-            if get_trades(&trade_conn, &kline).len() < 2 {
+            if get_trades(&trade_conn, &kline, true).len() < 1 {
                 let mut wallet_stmt = wallet_conn.prepare("SELECT * FROM wallet WHERE id = 1").unwrap();
                 let wallets = wallet_stmt.query_map(params![], |row| {
                     Ok(Wallet {
@@ -105,7 +121,7 @@ pub mod kline {
                             info!("Bought {} at {}, amount: {}", &kline.symbol, answer.price, answer.executed_qty);
                             trade_conn.execute(
                                 "INSERT INTO trades (id, amount_crypto, amount_money, start_bar_time) VALUES (?1, ?2, ?3, ?4)",
-                                params![answer.client_order_id, answer.executed_qty, quote_order_qty, SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as i64],
+                                params![answer.order_id as i64, answer.executed_qty, quote_order_qty, &kline.start_time],
                             ).unwrap();
                         }
                         Err(e) => warn!("Error: {:?}", e),
@@ -113,11 +129,12 @@ pub mod kline {
                 }
             }
 
-            for trade in get_trades(&trade_conn, &kline) {
+            for trade in get_trades(&trade_conn, &kline, false) {
                 let qty = trade.amount_crypto.parse::<f64>().unwrap();
                 let diff = &kline.close.parse::<f64>().unwrap() * qty - quote_order_qty;
-                // 0.01% for buying, 0.01% fee for selling, if we are above that we made a profit
-                if diff > (quote_order_qty * 0.02) {
+                info!("diff, value to break even: {:?} {:?}", diff, quote_order_qty * 0.02);
+                // 0.075% for buying, 0.075% fee for selling, if we are above that we made a profit
+                if diff > (quote_order_qty * 0.015) && should_sell {
                     // sell, we have made profit
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
@@ -126,7 +143,8 @@ pub mod kline {
                         },
                         Err(e) => warn!("Couldn't sell because error: {:?}", e)
                     }
-                } else if diff < (quote_order_qty * 0.95) {
+                    // -3 <= -0.65
+                } else if diff <= -(quote_order_qty * 0.2) {
                     // sell, we have made loss at -5% stoploss
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
@@ -136,9 +154,6 @@ pub mod kline {
                         Err(e) => warn!("Couldn't sell because error: {:?}", e)
                     }
                 }
-            }
-            for trade in get_trades(&trade_conn, &kline) {
-                info!("open trades: {:?}", trade.amount_crypto)
             }
         }
     }
