@@ -96,7 +96,6 @@ pub mod kline {
 
             let account: Account = Binance::new(Option::from(config.api_key.key), Option::from(config.api_key.secret));
             let quote_order_qty = 11.0;
-            // max 5 buy trades per bar
 
             if get_trades(&trade_conn, &kline, true).len() < 1 {
                 let mut wallet_stmt = wallet_conn.prepare("SELECT * FROM wallet WHERE id = 1").unwrap();
@@ -132,7 +131,7 @@ pub mod kline {
             for trade in get_trades(&trade_conn, &kline, false) {
                 let qty = trade.amount_crypto.parse::<f64>().unwrap();
                 let diff = &kline.close.parse::<f64>().unwrap() * qty - quote_order_qty;
-                info!("diff, value to break even: {:?} {:?}", diff, quote_order_qty * 0.02);
+                info!("diff, value to break even: {:?} {:?}", diff, quote_order_qty * 0.015);
                 // 0.075% for buying, 0.075% fee for selling, if we are above that we made a profit
                 if diff > (quote_order_qty * 0.015) && should_sell {
                     // sell, we have made profit
@@ -207,6 +206,8 @@ pub mod kline {
         info!("Successfully downloaded and saved all needed past klines")
     }
 
+
+
     pub fn open_kline_stream(handler: KlineHandler, symbol: String, conn: Connection, wallet_conn: Connection, trade_conn: Connection) {
         trade_conn.execute(
             "CREATE TABLE IF NOT EXISTS trades (
@@ -223,7 +224,9 @@ pub mod kline {
         let kline: String = format!("{}", format!("{}@kline_1m", symbol.to_lowercase()));
         let mut web_socket: WebSockets = WebSockets::new(|event: WebsocketEvent| {
             match event {
-                WebsocketEvent::Kline(kline_event) => handler(kline_event, &conn, &wallet_conn, &trade_conn),
+                WebsocketEvent::Kline(kline_event) => {
+                    handler(kline_event, &conn, &wallet_conn, &trade_conn)
+                },
                 _ => ()
             };
             Ok(())

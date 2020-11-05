@@ -29,7 +29,6 @@ fn main() -> () {
     let pairs_len = config.pairs.len();
     let pairs = Arc::new(Mutex::new(config.pairs));
     let mut handles = vec![];
-
     // Wallet synchronization
     thread::spawn(refresh);
 
