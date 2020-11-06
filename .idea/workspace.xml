@@ -14,12 +14,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44d18b28-b9a2-4cf7-80fe-5925797f47ef" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kline.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/kline.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sma.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/sma.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/strategy.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/strategy.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +100,7 @@
       <option name="presentableId" value="Default" />
       <updated>1604062326439</updated>
       <workItem from="1604062328138" duration="11841000" />
-      <workItem from="1604159681731" duration="80831000" />
+      <workItem from="1604159681731" duration="82932000" />
     </task>
     <task id="LOCAL-00001" summary="feat: initial commit">
       <created>1604065921138</created>
@@ -174,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604497329024</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="change the values for buying/selling">
+      <created>1604601583970</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1604601583971</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -201,7 +206,8 @@
     <MESSAGE value="a lot of work for buy/sell/wallet management" />
     <MESSAGE value="yeet" />
     <MESSAGE value="add work for sell/buy logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="add work for sell/buy logic" />
+    <MESSAGE value="change the values for buying/selling" />
+    <option name="LAST_COMMIT_MESSAGE" value="change the values for buying/selling" />
   </component>
   <component name="WindowStateProjectService">
     <state x="184" y="101" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604064815219">
@@ -244,12 +250,13 @@
     <state width="1016" height="245" key="GridCell.Tab.0.right/0.23.1440.831@0.23.1440.831" timestamp="1604335354903" />
     <state width="1398" height="339" key="GridCell.Tab.0.right/0.23.1440.832@0.23.1440.832" timestamp="1604420716833" />
     <state width="1398" height="114" key="GridCell.Tab.0.right/0.23.1440.833@0.23.1440.833" timestamp="1604598630011" />
-    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604497330266">
-      <screen x="0" y="23" width="1440" height="833" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2" timestamp="1604601585814">
+      <screen x="0" y="23" width="1440" height="834" />
     </state>
     <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.831@0.23.1440.831" timestamp="1604335432198" />
     <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.832@0.23.1440.832" timestamp="1604157318846" />
     <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.833@0.23.1440.833" timestamp="1604497330266" />
+    <state x="320" y="160" key="Vcs.Push.Dialog.v2/0.23.1440.834@0.23.1440.834" timestamp="1604601585814" />
     <state x="516" y="356" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1604067545339">
       <screen x="0" y="23" width="1440" height="832" />
     </state>
