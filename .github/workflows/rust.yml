@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Install ta-lib wrapper
+      run: wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && tar xvzf ta-lib-0.4.0-src.tar.gz && rm ta-lib-0.4.0-src.tar.gz && cd ta-lib && chmod +x ./configure && ./configure && make && sudo make install
     - name: Build
       run: cargo build --verbose
     - name: Run tests
