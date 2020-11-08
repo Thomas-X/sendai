@@ -19,10 +19,10 @@ pub mod kline {
 
 
     pub struct Trade {
-        id: i64,
-        amount_crypto: String,
-        amount_money: String,
-        start_bar_time: i64,
+        pub id: i64,
+        pub amount_crypto: String,
+        pub amount_money: String,
+        pub start_bar_time: i64,
     }
 
     pub fn get_trades (trade_conn: &Connection, kline: &Kline, current_bar: bool) -> Vec<Trade> {
@@ -92,7 +92,7 @@ pub mod kline {
                 klines.push(kline.unwrap());
             }
 
-            let (should_sell, should_buy) = strategy::calculate(&klines);
+            let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn);
 
             let account: Account = Binance::new(Option::from(config.api_key.key), Option::from(config.api_key.secret));
             let quote_order_qty = 11.0;
