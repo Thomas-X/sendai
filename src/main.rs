@@ -1,10 +1,10 @@
 mod kline;
-mod strategy;
 mod squeeze_momentum;
 mod wallet;
 mod indicators;
 mod bootstrap;
 mod db;
+mod strategy;
 
 use std::sync::atomic::{AtomicBool};
 use log::{info, trace, warn};

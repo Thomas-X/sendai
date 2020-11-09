@@ -4,9 +4,7 @@ pub mod strategy {
     use crate::squeeze_momentum::squeeze_momentum;
     use rusqlite::{params, Connection, Result, Statement};
     use std::time::{UNIX_EPOCH, SystemTime};
-    use crate::kline::kline::Trade;
-
-
+    use crate::db::db::trade::{Trade};
     // [CHECK] TODO: implement "wallet" balance mechanism
     // [CHECK] TODO: implement trade model, but could also just be a create_table if not exists
     // TODO: implement "buying" mechanism
