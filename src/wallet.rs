@@ -1,12 +1,12 @@
 pub mod wallet {
     use binance::account::*;
     use binance::api::Binance;
-    use crate::config::config::{Config, config};
     use std::thread;
     use core::time;
     use log::{info, trace, warn};
     use rusqlite::{params, Connection, Result};
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use crate::bootstrap::Bootstrap;
 
     pub struct Wallet {
         pub id: i64,
@@ -14,10 +14,10 @@ pub mod wallet {
         pub last_updated_at: i64,
     }
 
-    pub fn refresh() {
-        let config = config();
+    pub fn refresh(boot: Bootstrap) {
+        let config = &boot.config;
         let wallet_conn = Connection::open("wallet.db").unwrap();
-        let account: Account = Binance::new(Option::from(config.api_key.key), Option::from(config.api_key.secret));
+        let account: Account = Binance::new(Option::from(config.api_key.key.clone()), Option::from(config.api_key.secret.clone()));
         let wallet_refresh_time = 10000;
         wallet_conn.execute(
             "CREATE TABLE IF NOT EXISTS wallet (
