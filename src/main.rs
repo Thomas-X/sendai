@@ -1,16 +1,10 @@
-mod config;
-mod logging;
 mod kline;
 mod strategy;
 mod squeeze_momentum;
-mod sma;
-mod stdev;
-mod trange;
-mod linreg;
-mod highest;
-mod lowest;
-mod avg;
 mod wallet;
+mod indicators;
+mod bootstrap;
+mod db;
 
 use std::sync::atomic::{AtomicBool};
 use log::{info, trace, warn};
@@ -19,45 +13,43 @@ use std::rc::Rc;
 use std::thread;
 use rusqlite::{params, Connection, Result};
 use crate::kline::kline::*;
-use crate::config::config::config;
 use crate::wallet::wallet::refresh;
+use crate::db::db::*;
+use crate::db::db::kline::create_klines_table;
 
 fn main() -> () {
-    logging::logging();
-    info!("Starting up");
-    let config = config();
-    let pairs_len = config.pairs.len();
-    let pairs = Arc::new(Mutex::new(config.pairs));
-    let mut handles = vec![];
-    // Wallet synchronization
-    thread::spawn(refresh);
+    let mut b = bootstrap::Bootstrap::new();
+    b.boot();
 
+    info!("Starting up");
+
+    // wow this is ugly
+    let wallet_boot = b.clone();
+    let pairs_len = b.clone().config.pairs.len();
+    let bootstrap_arc = Arc::new(Mutex::new(b));
+    let mut handles = vec![];
+
+    // Wallet synchronization
+    thread::spawn(|| refresh(wallet_boot));
+
+    // Spawn separate threads with websockets
     for i in 0..pairs_len {
-        let pairs = Arc::clone(&pairs);
+        let bootstrap_arc_clone = Arc::clone(&bootstrap_arc);
         let handle = thread::spawn(move || {
-            let mut pairs_lock = pairs.lock().unwrap();
-            let symbol = pairs_lock[i].symbol.clone();
-            let conn = Connection::open(format!("{}.db", symbol)).unwrap();
+            let bootstrap_lock = bootstrap_arc_clone.lock().unwrap();
+            let bootstrap_instance = &bootstrap_lock.clone();
+            // uglyyyy
+            let symbol = &bootstrap_lock.clone().config.pairs[i].symbol;
+
+            let kline_conn = Connection::open(format!("{}.db", symbol)).unwrap();
             let wallet_conn = Connection::open("wallet.db").unwrap();
             let trade_conn = Connection::open(format!("trades-{}.db", symbol)).unwrap();
-            conn.execute(
-                "CREATE TABLE IF NOT EXISTS klines (
-                  id              INTEGER PRIMARY KEY,
-                  end_time        INTEGER NOT NULL,
-                  open            TEXT NOT NULL,
-                  close           TEXT NOT NULL,
-                  high            TEXT NOT NULL,
-                  low             TEXT NOT NULL,
-                  volume          TEXT NOT NULL,
-                  quote_volume    TEXT NOT NULL
-                  )",
-                params![],
-            ).unwrap();
+
+            create_klines_table(&kline_conn);
+
             info!("Opening stream for {}", symbol);
-            // we can't rely on Rust's out-of-scope dropping of lock because we're doing a sync call that never makes the lock go out of scope.
-            // we know what we're doing though, the compiler doesn't
-            drop(pairs_lock);
-            open_kline_stream(handle_kline_event, symbol, conn, wallet_conn, trade_conn);
+            drop(bootstrap_lock);
+            open_kline_stream(&bootstrap_instance, symbol.to_owned(), kline_conn, wallet_conn, trade_conn);
         });
         handles.push(handle)
     }
