@@ -27,7 +27,7 @@ pub mod kline {
         if kline.symbol != "" {
             let config = &boot.config;
             let klines = get_latest_klines(kline_conn);
-            let (should_sell, should_buy) = strategy::calculate(&klines);
+            let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn);
             let account: Account = Binance::new(Option::from(config.api_key.key.clone()), Option::from(config.api_key.secret.clone()));
 
             let quote_order_qty = config.stake_amount;
