@@ -4,6 +4,7 @@ use serde_json::Result;
 use std::env;
 use std::fs;
 use log::{info};
+use std::io::Error;
 
 #[derive(Clone)]
 pub struct Bootstrap {
@@ -42,8 +43,18 @@ impl Bootstrap {
     }
 
     pub fn config() -> Config {
-        let contents = fs::read_to_string("src/config.json")
-            .expect("Couldn't find config file, is it in src/config.json ?");
+        let contents = match fs::read_to_string("src/config.json") {
+            Ok(c) => c,
+            Err(_) => {
+                // try to run in prod
+                let a = match fs::read_to_string("../../src/config.json") {
+                    Ok(c) => c,
+                    Err(_) => panic!("could not find config file, even after trying prod path and dev path")
+                };
+                a
+            }
+        };
+            // .expect("Couldn't find config file, is it in src/config.json ?");
         let c: Config = serde_json::from_str(&contents)
             .expect("Couldn't read config file, invalid format");
         c

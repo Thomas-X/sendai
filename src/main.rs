@@ -5,6 +5,7 @@ mod indicators;
 mod bootstrap;
 mod db;
 mod strategy;
+mod util;
 
 use std::sync::atomic::{AtomicBool};
 use log::{info, trace, warn};
@@ -16,6 +17,8 @@ use crate::kline::kline::*;
 use crate::wallet::wallet::refresh;
 use crate::db::db::*;
 use crate::db::db::kline::create_klines_table;
+use crate::db::db::historical_squeeze::create_squeeze_table;
+
 
 fn main() -> () {
     let mut b = bootstrap::Bootstrap::new();
@@ -46,6 +49,7 @@ fn main() -> () {
             let trade_conn = Connection::open(format!("trades-{}.db", symbol)).unwrap();
 
             create_klines_table(&kline_conn);
+            create_squeeze_table(&trade_conn);
 
             info!("Opening stream for {}", symbol);
             drop(bootstrap_lock);

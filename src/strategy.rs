@@ -5,6 +5,9 @@ pub mod strategy {
     use rusqlite::{params, Connection, Result, Statement};
     use std::time::{UNIX_EPOCH, SystemTime};
     use crate::db::db::trade::{Trade};
+    use crate::db::db::historical_squeeze::{create_squeeze, Squeeze, get_squeeze_value};
+    use crate::util::util::get_now;
+    use std::borrow::Borrow;
     // [CHECK] TODO: implement "wallet" balance mechanism
     // [CHECK] TODO: implement trade model, but could also just be a create_table if not exists
     // TODO: implement "buying" mechanism
@@ -35,23 +38,38 @@ pub mod strategy {
     }
 
     pub fn calculate(klines: &Vec<Kline>, trade_conn: &Connection) -> (bool, bool) {
+        info!("-----------------------------------");
+        info!("Start calculation");
         let (last_value, current_value) = squeeze_momentum::calculate(&klines);
+        create_squeeze(trade_conn, &Squeeze {
+            value: current_value,
+            price_in_stake: klines.first().unwrap().close.parse::<f64>().unwrap(),
+            timestamp: get_now(),
+        });
+        // 2 = every 2 seconds we get 1 new squeeze value
+        // 300 = amount of squeeze values we need for startup
+        // 43200 = 24h of continious kline ticking
+        let amount_of_squeezes_needed = 43200;
+        let startup_time: f64 = (2 * amount_of_squeezes_needed) as f64;
+        let (squeeze_avg_negative, negative_squeeze_count) = get_squeeze_value(&trade_conn, get_now() - &startup_time, true);
+        let (squeeze_avg_positive, positive_squeeze_count) = get_squeeze_value(&trade_conn, get_now() - &startup_time, false);
+        info!("negative_squeeze_count, squeeze_avg_negative: {:?} {:?}", negative_squeeze_count, squeeze_avg_negative);
+        info!("positive_squeeze_count, squeeze_avg_positive: {:?} {:?}", positive_squeeze_count, squeeze_avg_positive);
         info!("Current squeeze value: {:?}", current_value);
-        if current_value > 0.0 {
-            return if current_value >= 25.9 {
-                (current_value > last_value, false)
-            } else {
-                (false, false)
-            }
-        } else if current_value < 0.0 {
-            // -30 is the lower band of the indicator (see tradingview https://www.tradingview.com/chart/LX2mHohb/)
-            let quarantine_trades = get_quarantine_bars(&trade_conn);
-            return if current_value <= -26.9 && quarantine_trades.len() < 15 {
-                return (false, current_value < last_value)
-            } else {
-                (false, false)
-            }
+        info!("End calculation");
+        info!("-----------------------------------");
+        // 1 hour mimimum warmup time and if we're currently in a negative setup
+        if negative_squeeze_count >= 1800 && current_value < 0.0 {
+            return (current_value <= squeeze_avg_negative && current_value <= last_value, false)
+        } else if negative_squeeze_count < 1800 {
+            info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count)
         }
-        return (false, false)
+        if positive_squeeze_count >= 1800 && current_value > 0.0 {
+            // only buy if we're above the avg AND if the current value is higher than the last value
+            return (false, current_value >= squeeze_avg_positive && current_value >= last_value)
+        } else if positive_squeeze_count < 1800 {
+            info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count)
+        }
+        return (false, false);
     }
 }

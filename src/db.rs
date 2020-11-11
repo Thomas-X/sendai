@@ -1,6 +1,8 @@
 pub mod db {
     use rusqlite::{params, Connection, Row};
     use binance::model::Kline;
+    use log::{info, trace, warn};
+    use rusqlite::types::ValueRef;
 
     pub mod wallet {
         use super::*;
@@ -83,6 +85,61 @@ pub mod db {
         }
     }
 
+    pub mod historical_squeeze {
+        use super::*;
+
+        pub struct Squeeze {
+            pub value: f64,
+            pub price_in_stake: f64,
+            pub timestamp: f64,
+        }
+
+        pub fn create_squeeze_table(trade_conn: &Connection) {
+            trade_conn.execute(
+                "CREATE TABLE IF NOT EXISTS squeezes (
+                  value           INTEGER NOT NULL,
+                  timestamp       INTEGER NOT NULL,
+                  price_in_stake  INTEGER NOT NULL
+                  )",
+                params![],
+            ).unwrap();
+        }
+
+        pub fn create_squeeze(trade_conn: &Connection, squeeze: &Squeeze) {
+            trade_conn.execute(
+                "REPLACE INTO squeezes (value, timestamp, price_in_stake) VALUES (?1, ?2, ?3)",
+                params![squeeze.value, squeeze.timestamp, squeeze.price_in_stake],
+            ).unwrap();
+        }
+
+        pub fn get_squeeze_value(trade_conn: &Connection, startup_start_time: f64, avg_exists_from_negative_values: bool) -> (f64, usize) {
+            let mut avg_filter = "";
+            if avg_exists_from_negative_values {
+                avg_filter = " AND value < 0 ";
+            } else {
+                avg_filter = " AND value > 0 ";
+            }
+            let mut stmt = trade_conn.prepare(&("SELECT value as avg_value FROM squeezes WHERE timestamp >= ?1".to_owned() + avg_filter + "ORDER BY timestamp desc LIMIT 43200")).unwrap();
+
+            let mut sum: f64 = 0.0;
+            let vals = stmt.query_map(params![startup_start_time], |row| {
+                Ok(row.get(0).unwrap())
+            })
+                .unwrap()
+                .map(|f| f.unwrap())
+                .collect::<Vec<f64>>();
+            for val in &vals {
+                sum += val.abs()
+            }
+            return if avg_exists_from_negative_values {
+                // * 0.95 to be a bit more eager to buy based on avgs (not 100% avg)
+                (-(sum / vals.len() as f64 * 0.95) as f64, vals.len())
+            } else {
+                ((sum / vals.len() as f64 * 0.95) as f64, vals.len())
+            }
+        }
+    }
+
     pub mod trade {
         use super::*;
 
@@ -105,7 +162,7 @@ pub mod db {
             ).unwrap();
         }
 
-        pub fn get_trades (trade_conn: &Connection, kline: &Kline, current_bar: bool) -> Vec<Trade> {
+        pub fn get_trades(trade_conn: &Connection, kline: &Kline, current_bar: bool) -> Vec<Trade> {
             if current_bar {
                 let mut stmt = trade_conn.prepare("SELECT * FROM trades WHERE start_bar_time = ?1").unwrap();
                 stmt.query_map(params![kline.start_time], |row| {
