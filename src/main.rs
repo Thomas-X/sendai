@@ -38,8 +38,8 @@ fn main() -> () {
     // Wallet synchronization
     thread::spawn(|| refresh(wallet_boot));
 
-    // Profit calculator
-    thread::spawn(move || run(b_copy.clone().config));
+    // TODO re-enable Profit calculator
+    // thread::spawn(move || run(b_copy.clone().config));
 
     // Spawn separate threads with websockets
     for i in 0..pairs_len {

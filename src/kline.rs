@@ -66,9 +66,20 @@ pub mod kline {
 
                 // -----------
                 //
-                // selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
+                // TODO re-enable selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
                 //
                 // -----------
+                // TODO switch back to profit calculator (better returns) and implement trailing profit(stop) loss
+                // if we get .5% profit we exit the trade, and when should_sell so we (hopefully) ride the wave as much as possible
+                if diff >= (quote_order_qty * 0.005) && should_sell {
+                    match account.market_sell::<&str, f64>(&kline.symbol, qty) {
+                        Ok(e) => {
+                            delete_trade(&trade_conn, trade.id);
+                            info!("Sold crypto at profit of, {:?} USDT, {:?}", diff, e)
+                        }
+                        Err(e) => warn!("Couldn't sell because error: {:?}", e)
+                    }
+                }
 
                 // Guard for extreme periods
                 if diff <= -(quote_order_qty * 0.25) {

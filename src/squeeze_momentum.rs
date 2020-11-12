@@ -20,9 +20,9 @@ pub mod squeeze_momentum {
     }
 
     pub fn calculate(klines: &Vec<Kline>) -> (f64, f64) {
-        let length: i32 = 20;
+        let length: i32 = 40;
         let mult = 2.0;
-        let length_kc: i32 = 20;
+        let length_kc: i32 = 40;
         let mult_kc = 1.5;
         let use_true_range = false;
         let low = &slice_and_map(&klines, length, |f| {
