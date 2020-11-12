@@ -8,6 +8,7 @@ pub mod strategy {
     use crate::db::db::historical_squeeze::{create_squeeze, Squeeze, get_squeeze_value};
     use crate::util::util::get_now;
     use std::borrow::Borrow;
+    use crate::bootstrap::Config;
     // [CHECK] TODO: implement "wallet" balance mechanism
     // [CHECK] TODO: implement trade model, but could also just be a create_table if not exists
     // TODO: implement "buying" mechanism
@@ -20,8 +21,8 @@ pub mod strategy {
     // todo add proper last value handling, atm it's just the last calculation but a calculation happens multiple times
     // todo per bar, so it should really just be the final calculation of the final bar
 
-    pub fn get_quarantine_bars(trade_conn: &Connection) -> Vec<Trade> {
-        let quarantine_time: i64 = (SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() - (60 * 20)) as i64;
+    pub fn get_quarantine_bars(trade_conn: &Connection, config: &Config) -> Vec<Trade> {
+        let quarantine_time: i64 = (SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() - (60 * config.quarantine_interval_in_min) as u64) as i64;
         let mut stmt = trade_conn.prepare("SELECT * FROM trades WHERE start_bar_time > ?1").unwrap();
         let trades = stmt.query_map(params![quarantine_time], |row| {
             Ok(Trade {
@@ -57,19 +58,23 @@ pub mod strategy {
         info!("positive_squeeze_count, squeeze_avg_positive: {:?} {:?}", positive_squeeze_count, squeeze_avg_positive);
         info!("Current squeeze value: {:?}", current_value);
         info!("End calculation");
-        info!("-----------------------------------");
         // 1 hour mimimum warmup time and if we're currently in a negative setup
         if negative_squeeze_count >= 1800 && current_value < 0.0 {
-            return (current_value <= squeeze_avg_negative && current_value <= last_value, false)
+            info!("-----------------------------------");
+            return (current_value <= squeeze_avg_negative && current_value <= last_value, false);
         } else if negative_squeeze_count < 1800 {
-            info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count)
+            info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count);
+            info!("-----------------------------------");
         }
         if positive_squeeze_count >= 1800 && current_value > 0.0 {
             // only buy if we're above the avg AND if the current value is higher than the last value
+            info!("-----------------------------------");
             return (false, current_value >= squeeze_avg_positive && current_value >= last_value)
         } else if positive_squeeze_count < 1800 {
-            info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count)
+            info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count);
+            info!("-----------------------------------");
         }
+        info!("-----------------------------------");
         return (false, false);
     }
 }

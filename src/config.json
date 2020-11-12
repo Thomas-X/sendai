@@ -2,6 +2,15 @@
   "pairs": [
     {
       "symbol": "BTCUSDT"
+    },
+    {
+      "symbol": "ETHUSDT"
+    },
+    {
+      "symbol": "LTCUSDT"
+    },
+    {
+      "symbol": "XRPUSDT"
     }
   ],
   "api_key": {
@@ -9,5 +18,7 @@
     "secret": "3epkSfZuUd75HLuGHOooJUuxs5e0xPjUrr0lSJr0ikTSllX4tRR4Id5bNeJYCO7m"
   },
   "stake_amount": 11.0,
-  "min_leftover": 22.0
+  "min_leftover": 22.0,
+  "quarantine_amount_trades": 15,
+  "quarantine_interval_in_min": 20
 }

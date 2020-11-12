@@ -18,6 +18,7 @@ pub mod kline {
     use crate::db::db::trade::{create_trades_table, get_trades, delete_trade};
     use crate::db::db::kline::{get_latest_klines, create_kline};
     use crate::db::db::wallet::{get_wallets};
+    use crate::strategy::strategy::get_quarantine_bars;
 
 
     pub fn handle_kline_event(boot: &Bootstrap, kline_event: KlineEvent, kline_conn: &Connection, wallet_conn: &Connection, trade_conn: &Connection) {
@@ -27,6 +28,12 @@ pub mod kline {
         if kline.symbol != "" {
             let config = &boot.config;
             let klines = get_latest_klines(kline_conn);
+            let quarantine_bars = get_quarantine_bars(&trade_conn, &config);
+            // 20 minutes quarantine interval, with a max of 10 trades per 20 min (so that means we're buying for 50% of the time)
+            if quarantine_bars.len() > config.quarantine_amount_trades {
+                info!("Quarantine for {:?} {:?}", kline.symbol, quarantine_bars.len());
+                return;
+            }
             let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn);
             let account: Account = Binance::new(Option::from(config.api_key.key.clone()), Option::from(config.api_key.secret.clone()));
 
@@ -59,14 +66,20 @@ pub mod kline {
                 info!("diff, value to break even: {:?} {:?}", diff, quote_order_qty * 0.015);
                 // 0.075% for buying, 0.075% fee for selling, if we are above that we made a profit
                 if diff > (quote_order_qty * 0.015) && should_sell {
-                    // sell, we have made profit
-                    match account.market_sell::<&str, f64>(&kline.symbol, qty) {
-                        Ok(e) => {
-                            delete_trade(&trade_conn, trade.id);
-                            info!("Sold crypto at profit of, {:?} USDT, {:?}", diff, e)
-                        }
-                        Err(e) => warn!("Couldn't sell because error: {:?}", e)
-                    }
+
+                    // -----------
+                    //
+                    // selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
+                    //
+                    // -----------
+
+                    // match account.market_sell::<&str, f64>(&kline.symbol, qty) {
+                    //     Ok(e) => {
+                    //         delete_trade(&trade_conn, trade.id);
+                    //         info!("Sold crypto at profit of, {:?} USDT, {:?}", diff, e)
+                    //     }
+                    //     Err(e) => warn!("Couldn't sell because error: {:?}", e)
+                    // }
                     // -3 <= -0.65
                 } else if diff <= -(quote_order_qty * 0.2) {
                     // sell, we have made loss at -5% stoploss

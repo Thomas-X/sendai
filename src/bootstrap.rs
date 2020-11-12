@@ -28,6 +28,8 @@ pub struct Config {
     pub api_key: ApiKey,
     pub stake_amount: f64,
     pub min_leftover: f64,
+    pub quarantine_amount_trades: usize,
+    pub quarantine_interval_in_min: usize,
 }
 
 impl Bootstrap {

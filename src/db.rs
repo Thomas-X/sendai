@@ -132,10 +132,10 @@ pub mod db {
                 sum += val.abs()
             }
             return if avg_exists_from_negative_values {
-                // * 0.95 to be a bit more eager to buy based on avgs (not 100% avg)
-                (-(sum / vals.len() as f64 * 0.95) as f64, vals.len())
+                // 1.1 to be a bit more conservative to buy based on avgs (not 100% avg)
+                (-(sum / vals.len() as f64 * 1.1) as f64, vals.len())
             } else {
-                ((sum / vals.len() as f64 * 0.95) as f64, vals.len())
+                ((sum / vals.len() as f64 * 1.1) as f64, vals.len())
             }
         }
     }
