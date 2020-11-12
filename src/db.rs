@@ -58,7 +58,7 @@ pub mod db {
         }
 
         pub fn get_latest_klines(kline_conn: &Connection) -> Vec<Kline> {
-            let mut stmt = kline_conn.prepare("SELECT * FROM klines ORDER BY id DESC LIMIT 25").unwrap();
+            let mut stmt = kline_conn.prepare("SELECT * FROM klines ORDER BY id DESC LIMIT 100").unwrap();
             stmt.query_map(params![], |row| {
                 Ok(serialize_kline(row))
             })
