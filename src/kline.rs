@@ -63,30 +63,20 @@ pub mod kline {
             for trade in get_trades(&trade_conn, &kline, false) {
                 let qty = trade.amount_crypto.parse::<f64>().unwrap();
                 let diff = &kline.close.parse::<f64>().unwrap() * qty - quote_order_qty;
-                info!("diff, value to break even: {:?} {:?}", diff, quote_order_qty * 0.015);
-                // 0.075% for buying, 0.075% fee for selling, if we are above that we made a profit
-                if diff > (quote_order_qty * 0.015) && should_sell {
 
-                    // -----------
-                    //
-                    // selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
-                    //
-                    // -----------
+                // -----------
+                //
+                // selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
+                //
+                // -----------
 
-                    // match account.market_sell::<&str, f64>(&kline.symbol, qty) {
-                    //     Ok(e) => {
-                    //         delete_trade(&trade_conn, trade.id);
-                    //         info!("Sold crypto at profit of, {:?} USDT, {:?}", diff, e)
-                    //     }
-                    //     Err(e) => warn!("Couldn't sell because error: {:?}", e)
-                    // }
-                    // -3 <= -0.65
-                } else if diff <= -(quote_order_qty * 0.2) {
+                // Guard for extreme periods
+                if diff <= -(quote_order_qty * 0.25) {
                     // sell, we have made loss at -5% stoploss
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
                             delete_trade(&trade_conn, trade.id);
-                            info!("Sold crypto at 5% LOSS, {:?}", e)
+                            info!("Sold crypto at 25% LOSS, {:?}", e)
                         }
                         Err(e) => warn!("Couldn't sell because error: {:?}", e)
                     }

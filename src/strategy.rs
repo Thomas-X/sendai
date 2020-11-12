@@ -57,23 +57,23 @@ pub mod strategy {
         info!("negative_squeeze_count, squeeze_avg_negative: {:?} {:?}", negative_squeeze_count, squeeze_avg_negative);
         info!("positive_squeeze_count, squeeze_avg_positive: {:?} {:?}", positive_squeeze_count, squeeze_avg_positive);
         info!("Current squeeze value: {:?}", current_value);
-        info!("End calculation");
         // 1 hour mimimum warmup time and if we're currently in a negative setup
         if negative_squeeze_count >= 1800 && current_value < 0.0 {
             info!("-----------------------------------");
+            info!("End calculation");
             return (current_value <= squeeze_avg_negative && current_value <= last_value, false);
         } else if negative_squeeze_count < 1800 {
             info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count);
-            info!("-----------------------------------");
         }
         if positive_squeeze_count >= 1800 && current_value > 0.0 {
             // only buy if we're above the avg AND if the current value is higher than the last value
+            info!("End calculation");
             info!("-----------------------------------");
             return (false, current_value >= squeeze_avg_positive && current_value >= last_value)
         } else if positive_squeeze_count < 1800 {
             info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count);
-            info!("-----------------------------------");
         }
+        info!("End calculation");
         info!("-----------------------------------");
         return (false, false);
     }

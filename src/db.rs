@@ -68,6 +68,17 @@ pub mod db {
                 .collect()
         }
 
+        pub fn get_latest_kline(kline_conn: &Connection) -> Vec<Kline> {
+            let mut stmt = kline_conn.prepare("SELECT * FROM klines ORDER BY id DESC LIMIT 1").unwrap();
+            stmt.query_map(params![], |row| {
+                Ok(serialize_kline(row))
+            })
+                .unwrap()
+                .into_iter()
+                .map(|f| f.unwrap())
+                .collect()
+        }
+
         pub fn create_klines_table(kline_conn: &Connection) {
             kline_conn.execute(
                 "CREATE TABLE IF NOT EXISTS klines (
