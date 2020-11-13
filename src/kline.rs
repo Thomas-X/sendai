@@ -28,12 +28,12 @@ pub mod kline {
         if kline.symbol != "" {
             let config = &boot.config;
             let klines = get_latest_klines(kline_conn);
-            let quarantine_bars = get_quarantine_bars(&trade_conn, &config);
+            // let quarantine_bars = get_quarantine_bars(&trade_conn, &config);
             // 20 minutes quarantine interval, with a max of 10 trades per 20 min (so that means we're buying for 50% of the time)
-            if quarantine_bars.len() > config.quarantine_amount_trades {
-                info!("Quarantine for {:?} {:?}", kline.symbol, quarantine_bars.len());
-                return;
-            }
+            // if quarantine_bars.len() > config.quarantine_amount_trades {
+            //     info!("Quarantine for {:?} {:?}", kline.symbol, quarantine_bars.len());
+            //     return;
+            // }
             let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn);
             let account: Account = Binance::new(Option::from(config.api_key.key.clone()), Option::from(config.api_key.secret.clone()));
 
