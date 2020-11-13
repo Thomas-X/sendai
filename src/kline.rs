@@ -62,7 +62,7 @@ pub mod kline {
 
             for trade in get_trades(&trade_conn, &kline, false) {
                 let qty = trade.amount_crypto.parse::<f64>().unwrap();
-                let diff = &kline.close.parse::<f64>().unwrap() * qty - quote_order_qty;
+                let diff = (&kline.close.parse::<f64>().unwrap() * qty - quote_order_qty) - (quote_order_qty * 0.00015);
 
                 // -----------
                 //
@@ -70,8 +70,8 @@ pub mod kline {
                 //
                 // -----------
                 // TODO switch back to profit calculator (better returns) and implement trailing profit(stop) loss
-                // if we get .5% profit we exit the trade, and when should_sell so we (hopefully) ride the wave as much as possible
-                if diff >= (quote_order_qty * 0.005) && should_sell {
+                // if we get .015% profit we exit the trade
+                if diff >= (quote_order_qty * 0.00015) {
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
                             delete_trade(&trade_conn, trade.id);
