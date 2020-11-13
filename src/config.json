@@ -5,12 +5,6 @@
     },
     {
       "symbol": "ETHUSDT"
-    },
-    {
-      "symbol": "LTCUSDT"
-    },
-    {
-      "symbol": "XRPUSDT"
     }
   ],
   "api_key": {
