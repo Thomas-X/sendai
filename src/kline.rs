@@ -62,8 +62,8 @@ pub mod kline {
 
             for trade in get_trades(&trade_conn, &kline, false) {
                 let qty = trade.amount_crypto.parse::<f64>().unwrap();
-                let diff = (&kline.close.parse::<f64>().unwrap() * qty - quote_order_qty) - (quote_order_qty * 0.00015);
-
+                let diff = (&kline.close.parse::<f64>().unwrap() * qty - quote_order_qty) - (quote_order_qty * 0.0015);
+                info!("diff for trade: {:?}", diff);
                 // -----------
                 //
                 // TODO re-enable selling is handled by the 1% profit calculator now, running in a separate thread launched from main.rs.
@@ -71,7 +71,7 @@ pub mod kline {
                 // -----------
                 // TODO switch back to profit calculator (better returns) and implement trailing profit(stop) loss
                 // if we get .015% profit we exit the trade
-                if diff >= (quote_order_qty * 0.00015) {
+                if diff > 0.0 {
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
                             delete_trade(&trade_conn, trade.id);
