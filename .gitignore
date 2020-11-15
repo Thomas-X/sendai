@@ -6,3 +6,5 @@ build
 *.db*
 sendai
 sendai.d
+/src/env.json
+src/env.json
