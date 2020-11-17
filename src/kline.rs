@@ -39,7 +39,7 @@ pub mod kline {
 
             let quote_order_qty = config.stake_amount;
 
-            if get_trades(&trade_conn, &kline, true).len() < 1 {
+            if get_trades(&trade_conn, &kline, true).len() < 2 {
                 let wallets = get_wallets(&wallet_conn);
                 let wallet = &wallets[0];
                 // we're out of $$$ to buy, lets stop
@@ -71,7 +71,7 @@ pub mod kline {
                 // -----------
                 // TODO switch back to profit calculator (better returns) and implement trailing profit(stop) loss
                 // if we get .015% profit we exit the trade
-                if diff > 0.0 {
+                if diff > 0.0 && should_sell == true {
                     match account.market_sell::<&str, f64>(&kline.symbol, qty) {
                         Ok(e) => {
                             delete_trade(&trade_conn, trade.id);
@@ -99,7 +99,7 @@ pub mod kline {
     pub fn kline_data_fillup(boot: &Bootstrap, symbol: &String, kline_conn: &Connection, wallet_conn: &Connection, trade_conn: &Connection) {
         info!("Doing data fillup of past 500 klines");
         let market: Market = Binance::new(None, None);
-        match market.get_klines(symbol, "1m", 500, None, None) {
+        match market.get_klines(symbol, "5m", 500, None, None) {
             Ok(kline_summaries) => {
                 match kline_summaries {
                     KlineSummaries::AllKlineSummaries(klines) => {
@@ -141,7 +141,7 @@ pub mod kline {
     pub fn open_kline_stream(boot: &Bootstrap, symbol: String, kline_conn: Connection, wallet_conn: Connection, trade_conn: Connection) {
         create_trades_table(&trade_conn);
         kline_data_fillup(&boot, &symbol, &kline_conn, &wallet_conn, &trade_conn);
-        let kline: String = format!("{}", format!("{}@kline_1m", symbol.to_lowercase()));
+        let kline: String = format!("{}", format!("{}@kline_5m", symbol.to_lowercase()));
         let mut web_socket: WebSockets = WebSockets::new(|event: WebsocketEvent| {
             match event {
                 WebsocketEvent::Kline(kline_event) => handle_kline_event(&boot, kline_event, &kline_conn, &wallet_conn, &trade_conn),
