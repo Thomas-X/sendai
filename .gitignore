@@ -8,3 +8,5 @@ sendai
 sendai.d
 /src/env.json
 src/env.json
+/src/env-etf.json
+src/env-etf.json

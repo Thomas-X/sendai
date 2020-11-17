@@ -32,6 +32,7 @@ fn main() -> () {
     let wallet_boot = b.clone();
     let pairs_len = b.clone().config.pairs.len();
     let b_copy = b.clone();
+    info!("RUNNING IN {} MODE ON TIMEFRAME {}, spotmode={}", &b_copy.config.mode, &b_copy.config.timeframe, &b_copy.config.mode == "spot");
     let bootstrap_arc = Arc::new(Mutex::new(b));
     let mut handles = vec![];
 

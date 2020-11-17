@@ -30,6 +30,10 @@ pub struct Config {
     pub min_leftover: f64,
     pub quarantine_amount_trades: usize,
     pub quarantine_interval_in_min: usize,
+    pub mode: String,
+    pub timeframe: String,
+    pub max_amount_of_trades: usize,
+    pub max_amount_of_trades_per_bar: usize
 }
 
 impl Bootstrap {
