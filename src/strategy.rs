@@ -61,7 +61,7 @@ pub mod strategy {
         if negative_squeeze_count >= boot.config.startup_bar_time && current_value < 0.0 {
             info!("-----------------------------------");
             info!("End calculation");
-            return (current_value <= squeeze_avg_negative && current_value >= last_value, false);
+            return (current_value <= squeeze_avg_negative && current_value <= last_value, false);
         } else if negative_squeeze_count < boot.config.startup_bar_time {
             info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count);
         }
@@ -69,7 +69,7 @@ pub mod strategy {
             // only buy if we're above the avg
             info!("End calculation");
             info!("-----------------------------------");
-            return (false, current_value >= squeeze_avg_positive && current_value <= last_value)
+            return (false, current_value >= squeeze_avg_positive && current_value >= last_value)
         } else if positive_squeeze_count < boot.config.startup_bar_time {
             info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count);
         }
