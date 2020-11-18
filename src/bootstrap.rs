@@ -33,7 +33,8 @@ pub struct Config {
     pub mode: String,
     pub timeframe: String,
     pub max_amount_of_trades: usize,
-    pub max_amount_of_trades_per_bar: usize
+    pub max_amount_of_trades_per_bar: usize,
+    pub startup_bar_time: usize
 }
 
 impl Bootstrap {

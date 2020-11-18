@@ -34,7 +34,7 @@ pub mod kline {
             //     info!("Quarantine for {:?} {:?}", kline.symbol, quarantine_bars.len());
             //     return;
             // }
-            let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn);
+            let (should_sell, should_buy) = strategy::calculate(&klines, &trade_conn, &boot);
             let account: Account = Binance::new(Option::from(config.api_key.key.clone()), Option::from(config.api_key.secret.clone()));
 
             let quote_order_qty = config.stake_amount;

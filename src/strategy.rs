@@ -8,7 +8,7 @@ pub mod strategy {
     use crate::db::db::historical_squeeze::{create_squeeze, Squeeze, get_squeeze_value};
     use crate::util::util::get_now;
     use std::borrow::Borrow;
-    use crate::bootstrap::Config;
+    use crate::bootstrap::{Config, Bootstrap};
     // [CHECK] TODO: implement "wallet" balance mechanism
     // [CHECK] TODO: implement trade model, but could also just be a create_table if not exists
     // TODO: implement "buying" mechanism
@@ -38,7 +38,7 @@ pub mod strategy {
         trades
     }
 
-    pub fn calculate(klines: &Vec<Kline>, trade_conn: &Connection) -> (bool, bool) {
+    pub fn calculate(klines: &Vec<Kline>, trade_conn: &Connection, boot: &Bootstrap) -> (bool, bool) {
         info!("-----------------------------------");
         info!("Start calculation");
         let (last_value, current_value) = squeeze_momentum::calculate(&klines);
@@ -58,19 +58,19 @@ pub mod strategy {
         info!("positive_squeeze_count, squeeze_avg_positive: {:?} {:?}", positive_squeeze_count, squeeze_avg_positive);
         info!("Current squeeze value: {:?}", current_value);
         // 1 hour mimimum warmup time and if we're currently in a negative setup
-        if negative_squeeze_count >= 14400 && current_value < 0.0 {
+        if negative_squeeze_count >= boot.config.startup_bar_time && current_value < 0.0 {
             info!("-----------------------------------");
             info!("End calculation");
             return (current_value <= squeeze_avg_negative && current_value >= last_value, false);
-        } else if negative_squeeze_count < 14400 {
+        } else if negative_squeeze_count < boot.config.startup_bar_time {
             info!("Not buying because squeeze amount is too low for avg {:?}", negative_squeeze_count);
         }
-        if positive_squeeze_count >= 14400 && current_value > 0.0 {
+        if positive_squeeze_count >= boot.config.startup_bar_time && current_value > 0.0 {
             // only buy if we're above the avg
             info!("End calculation");
             info!("-----------------------------------");
             return (false, current_value >= squeeze_avg_positive && current_value <= last_value)
-        } else if positive_squeeze_count < 14400 {
+        } else if positive_squeeze_count < boot.config.startup_bar_time {
             info!("Not selling because squeeze amount is too low for avg {:?}", positive_squeeze_count);
         }
         info!("End calculation");
